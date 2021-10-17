@@ -2,7 +2,7 @@
   "name": "tads-pwi-1",
   "author": "Mateus Holzschuh <mateusholzschuh@hotmail.com>",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
