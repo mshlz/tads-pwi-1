@@ -26,6 +26,14 @@ router.get("/links/:hash", (req, res) => {
   return res.json(result);
 });
 
+/** Delete shortened link */
+router.delete("/links/:hash", (req, res) => {
+  const { hash } = req.params;
+  const result = LinkService.deleteLink(hash);
+
+  return res.json(result);
+});
+
 /** Create a new shortened link */
 router.post("/links", (req, res) => {
   const { link } = req.body;

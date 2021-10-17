@@ -39,6 +39,17 @@ class LinkService {
     return { hash, ...link };
   }
 
+  static deleteLink(hash) {
+    const link = this.storage[hash];
+
+    if (!link) {
+      throw new NotFoundError("Link not found");
+    }
+    delete this.storage[hash];
+
+    return { hash, ...link };
+  }
+
   static getAllLinks() {
     return Object.entries(this.storage).map((v) => {
       return {
