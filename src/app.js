@@ -3,6 +3,8 @@ const { NotFoundError } = require("./helpers/http");
 const routes = require("./routes");
 
 const app = express();
+app.set('view engine', 'ejs');
+
 app.use(express.json());
 app.use(routes);
 
