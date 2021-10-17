@@ -12,14 +12,14 @@ router.get("/", (req, res) => {
  */
 
 /** List all shortened links */
-router.get("/links", (req, res) => {
+router.get("/api/links", (req, res) => {
   const result = LinkService.getAllLinks();
 
   return res.json(result);
 });
 
 /** Get stats from shortened link */
-router.get("/links/:hash", (req, res) => {
+router.get("/api/links/:hash", (req, res) => {
   const { hash } = req.params;
   const result = LinkService.getLink(hash);
 
@@ -27,7 +27,7 @@ router.get("/links/:hash", (req, res) => {
 });
 
 /** Delete shortened link */
-router.delete("/links/:hash", (req, res) => {
+router.delete("/api/links/:hash", (req, res) => {
   const { hash } = req.params;
   const result = LinkService.deleteLink(hash);
 
@@ -35,7 +35,7 @@ router.delete("/links/:hash", (req, res) => {
 });
 
 /** Create a new shortened link */
-router.post("/links", (req, res) => {
+router.post("/api/links", (req, res) => {
   const { link } = req.body;
 
   if (!link) {
