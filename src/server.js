@@ -1,4 +1,10 @@
-const app = require("./app");
+const { createApp } = require("./app");
 
-const PORT = process.env.PORT || 3004;
-app.listen(PORT, () => console.log(`Server started at port: ${PORT}`));
+(async () => {
+  const app = await createApp();
+  const PORT = process.env.PORT || 3004;
+
+  app.listen(PORT, () =>
+    console.log(`Server started at port: http://localhost:${PORT}`)
+  );
+})();
