@@ -1,63 +1,58 @@
 const { customAlphabet, urlAlphabet } = require("nanoid");
 const { NotFoundError } = require("../helpers/http");
+const Link = require("../models/Link");
 
 class LinkService {
   static storage = {};
 
-  static createLink(original, size = 4) {
+  static async createLink(original, size = 4) {
     const hash = customAlphabet(urlAlphabet, size)();
-    this.storage[hash] = {
-      original,
-      visits: 0,
-    };
 
-    return {
-      original,
+    const link = await Link.create({
       hash,
-    };
+      original,
+    });
+
+    return link;
   }
 
-  static getOriginalLink(hash) {
-    const link = this.storage[hash];
+  static async getOriginalLink(hash) {
+    const link = await Link.findOne({ where: { hash } });
 
     if (!link) {
       throw new NotFoundError("Link not found");
     }
 
     link.visits++;
+    await link.save();
 
     return link.original;
   }
 
-  static getLink(hash) {
-    const link = this.storage[hash];
+  static async getLink(hash) {
+    const link = await Link.findOne({ where: { hash } });
 
     if (!link) {
       throw new NotFoundError("Link not found");
     }
 
-    return { hash, ...link };
+    return link;
   }
 
-  static deleteLink(hash) {
-    const link = this.storage[hash];
+  static async deleteLink(hash) {
+    const link = await Link.findOne({ where: { hash } });
 
     if (!link) {
       throw new NotFoundError("Link not found");
     }
-    delete this.storage[hash];
 
-    return { hash, ...link };
+    const result = await link.destroy()
+
+    return { success: !!result };
   }
 
-  static getAllLinks() {
-    return Object.entries(this.storage).map((v) => {
-      return {
-        hash: v[0],
-        original: v[1].original,
-        visits: v[1].visits,
-      };
-    });
+  static async getAllLinks() {
+    return Link.findAll();
   }
 }
 

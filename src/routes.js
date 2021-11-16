@@ -1,4 +1,5 @@
 const { ValidationError } = require("./helpers/http");
+const { safeThrow } = require("./helpers/safe-throw");
 const LinkService = require("./services/LinkService");
 
 const router = require("express").Router();
@@ -12,30 +13,30 @@ router.get("/", (req, res) => {
  */
 
 /** List all shortened links */
-router.get("/api/links", (req, res) => {
-  const result = LinkService.getAllLinks();
+router.get("/api/links", safeThrow(async (req, res) => {
+  const result = await LinkService.getAllLinks();
 
   return res.json(result);
-});
+}));
 
 /** Get stats from shortened link */
-router.get("/api/links/:hash", (req, res) => {
+router.get("/api/links/:hash", safeThrow(async (req, res) => {
   const { hash } = req.params;
-  const result = LinkService.getLink(hash);
+  const result = await LinkService.getLink(hash);
 
   return res.json(result);
-});
+}));
 
 /** Delete shortened link */
-router.delete("/api/links/:hash", (req, res) => {
+router.delete("/api/links/:hash", safeThrow(async (req, res) => {
   const { hash } = req.params;
-  const result = LinkService.deleteLink(hash);
+  const result = await LinkService.deleteLink(hash);
 
   return res.json(result);
-});
+}));
 
 /** Create a new shortened link */
-router.post("/api/links", (req, res) => {
+router.post("/api/links", safeThrow(async (req, res) => {
   const { link } = req.body;
 
   if (!link) {
@@ -44,17 +45,17 @@ router.post("/api/links", (req, res) => {
     });
   }
 
-  const result = LinkService.createLink(link);
+  const result = await LinkService.createLink(link);
 
   return res.json(result);
-});
+}));
 
 /** Redirect to the original link */
-router.get("/l/:hash", (req, res) => {
+router.get("/l/:hash", safeThrow(async (req, res) => {
   const { hash } = req.params;
-  const originalLink = LinkService.getOriginalLink(hash);
+  const originalLink = await LinkService.getOriginalLink(hash);
 
   return res.redirect(originalLink);
-});
+}));
 
 module.exports = router;
