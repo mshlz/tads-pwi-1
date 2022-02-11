@@ -2,8 +2,7 @@ import { customAlphabet, urlAlphabet } from "nanoid";
 import { NotFoundError } from "../helpers/http";
 import { Link } from "../models/Link";
 
-class LinkService {
-  static storage = {};
+export class LinkService {
 
   static async createLink(original: string, size = 4) {
     const hash = customAlphabet(urlAlphabet, size)();
@@ -11,6 +10,7 @@ class LinkService {
     const link = Link.create({
       hash,
       original,
+      visits: 0
     });
 
     return link.save();
@@ -55,5 +55,3 @@ class LinkService {
     return Link.find();
   }
 }
-
-module.exports = LinkService;

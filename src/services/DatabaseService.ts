@@ -14,6 +14,7 @@ export class DatabaseService {
         username: DB_USER,
         password: DB_PASSWORD,
         type: 'postgres',
+        logging: true,
         entities: [Link]
       })
       console.log("Connection has been established successfully.");

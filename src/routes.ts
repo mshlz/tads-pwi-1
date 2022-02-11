@@ -1,8 +1,9 @@
-const { ValidationError } = require("./helpers/http");
-const { safeThrow } = require("./helpers/safe-throw");
-const LinkService = require("./services/LinkService");
+import { ValidationError } from "./helpers/http";
+import { safeThrow } from "./helpers/safe-throw";
+import { LinkService } from "./services/LinkService";
+import { Router } from 'express'
 
-const router = require("express").Router();
+const router = Router();
 
 router.get("/", (req, res) => {
   res.render("index");

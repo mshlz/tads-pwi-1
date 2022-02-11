@@ -1,16 +1,14 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity } from "typeorm";
+import { ActiveRecord } from "./ActiveRecord";
 
 @Entity({ name: 'links' })
-export class Link extends BaseEntity {
-    @PrimaryColumn()
-    id: number
-
+export class Link extends ActiveRecord {
     @Column()
     original: string
 
     @Column()
     hash: string
 
-    @Column()
+    @Column({ default: 0 })
     visits: number
 }
