@@ -58,4 +58,4 @@ router.get("/l/:hash", safeThrow(async (req, res) => {
   return res.redirect(originalLink);
 }));
 
-module.exports = router;
+export default router

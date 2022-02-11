@@ -1,4 +1,4 @@
-const { createApp } = require("./app");
+import { createApp } from "./app";
 
 (async () => {
   const app = await createApp();

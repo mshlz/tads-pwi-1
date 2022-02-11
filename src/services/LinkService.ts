@@ -1,22 +1,22 @@
-const { customAlphabet, urlAlphabet } = require("nanoid");
-const { NotFoundError } = require("../helpers/http");
-const Link = require("../models/Link");
+import { customAlphabet, urlAlphabet } from "nanoid";
+import { NotFoundError } from "../helpers/http";
+import { Link } from "../models/Link";
 
 class LinkService {
   static storage = {};
 
-  static async createLink(original, size = 4) {
+  static async createLink(original: string, size = 4) {
     const hash = customAlphabet(urlAlphabet, size)();
 
-    const link = await Link.create({
+    const link = Link.create({
       hash,
       original,
     });
 
-    return link;
+    return link.save();
   }
 
-  static async getOriginalLink(hash) {
+  static async getOriginalLink(hash: string) {
     const link = await Link.findOne({ where: { hash } });
 
     if (!link) {
@@ -29,7 +29,7 @@ class LinkService {
     return link.original;
   }
 
-  static async getLink(hash) {
+  static async getLink(hash: string) {
     const link = await Link.findOne({ where: { hash } });
 
     if (!link) {
@@ -39,20 +39,20 @@ class LinkService {
     return link;
   }
 
-  static async deleteLink(hash) {
+  static async deleteLink(hash: string) {
     const link = await Link.findOne({ where: { hash } });
 
     if (!link) {
       throw new NotFoundError("Link not found");
     }
 
-    const result = await link.destroy()
+    const result = await link.remove()
 
     return { success: !!result };
   }
 
   static async getAllLinks() {
-    return Link.findAll();
+    return Link.find();
   }
 }
 

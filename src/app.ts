@@ -1,9 +1,9 @@
-const express = require("express");
-const { NotFoundError } = require("./helpers/http");
-const routes = require("./routes");
-const { DatabaseService } = require("./services/DatabaseService");
+import express from "express";
+import { NotFoundError } from "./helpers/http";
+import routes from "./routes";
+import { DatabaseService } from "./services/DatabaseService";
 
-const createApp = async () => {
+export const createApp = async () => {
   const app = express();
   app.set("view engine", "ejs");
 
@@ -29,5 +29,3 @@ const createApp = async () => {
 
   return app;
 };
-
-module.exports = { createApp };

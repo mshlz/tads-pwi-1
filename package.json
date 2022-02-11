@@ -5,14 +5,18 @@
   "main": "src/server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node src/server.js"
+    "start": "ts-node src/server.ts"
   },
   "dependencies": {
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "nanoid": "^3.1.30",
-    "pg": "^8.7.1",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.9.0"
+    "pg": "^8.7.3",
+    "typeorm": "^0.2.41"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.17",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5"
   }
 }
