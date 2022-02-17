@@ -2,14 +2,32 @@ import express from "express";
 import { NotFoundError } from "./helpers/http";
 import routes from "./routes";
 import { DatabaseService } from "./services/DatabaseService";
+import { engine } from 'express-handlebars';
+import path from 'path'
+import session from 'express-session'
+import { JWT_SKEY } from "./config/env";
 
 export const createApp = async () => {
   const app = express();
-  app.set("view engine", "ejs");
+
+  app.engine('.hbs', engine({
+    defaultLayout: 'main',
+    extname: '.hbs',
+    layoutsDir: path.resolve(__dirname, '../views/layouts'),
+    partialsDir: path.resolve(__dirname, '../views/partials')
+  }))
+  app.set("view engine", '.hbs');
+  
+  app.use(session({
+    secret: JWT_SKEY,
+    resave: false,
+    saveUninitialized: true,
+  }))
 
   await DatabaseService.init();
   // await DatabaseService.sequelize.sync({ alter: true }); // uncomment to sync tables
 
+  app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
   app.use(routes);
 
