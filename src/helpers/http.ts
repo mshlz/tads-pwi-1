@@ -7,6 +7,18 @@ class HttpError extends Error {
   }
 }
 
+export class BadRequestError extends HttpError {
+  constructor(message: string) {
+    super(message || "BadRequest", 400);
+  }
+}
+
+export class UnauthenticatedError extends HttpError {
+  constructor(message: string) {
+    super(message || "Unauthenticated", 401);
+  }
+}
+
 export class NotFoundError extends HttpError {
   constructor(message: string) {
     super(message || "NotFound", 404);

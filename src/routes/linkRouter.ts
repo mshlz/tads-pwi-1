@@ -1,27 +1,23 @@
-import { ValidationError } from "./helpers/http";
-import { safeThrow } from "./helpers/safe-throw";
-import { LinkService } from "./services/LinkService";
-import { Router } from 'express'
+import { Router } from 'express';
+import { ValidationError } from "../helpers/http";
+import { safeThrow } from "../helpers/safe-throw";
+import { LinkService } from "../services/LinkService";
 
-const router = Router();
-
-router.get("/", (req, res) => {
-  res.render("index");
-});
+const router = Router({ mergeParams: true });
 
 /**
  * Link shortener routes
  */
 
 /** List all shortened links */
-router.get("/api/links", safeThrow(async (req, res) => {
+router.get("/", safeThrow(async (req, res) => {
   const result = await LinkService.getAllLinks();
 
   return res.json(result);
 }));
 
 /** Get stats from shortened link */
-router.get("/api/links/:hash", safeThrow(async (req, res) => {
+router.get("/:hash", safeThrow(async (req, res) => {
   const { hash } = req.params;
   const result = await LinkService.getLink(hash);
 
@@ -29,7 +25,7 @@ router.get("/api/links/:hash", safeThrow(async (req, res) => {
 }));
 
 /** Delete shortened link */
-router.delete("/api/links/:hash", safeThrow(async (req, res) => {
+router.delete("/:hash", safeThrow(async (req, res) => {
   const { hash } = req.params;
   const result = await LinkService.deleteLink(hash);
 
@@ -37,7 +33,7 @@ router.delete("/api/links/:hash", safeThrow(async (req, res) => {
 }));
 
 /** Create a new shortened link */
-router.post("/api/links", safeThrow(async (req, res) => {
+router.post("/", safeThrow(async (req, res) => {
   const { link } = req.body;
 
   if (!link) {
@@ -49,14 +45,6 @@ router.post("/api/links", safeThrow(async (req, res) => {
   const result = await LinkService.createLink(link);
 
   return res.json(result);
-}));
-
-/** Redirect to the original link */
-router.get("/l/:hash", safeThrow(async (req, res) => {
-  const { hash } = req.params;
-  const originalLink = await LinkService.getOriginalLink(hash);
-
-  return res.redirect(originalLink);
 }));
 
 export default router
