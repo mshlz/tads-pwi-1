@@ -1,0 +1,15 @@
+{
+    "configurations": [
+      {
+        "type": "node-terminal",
+        "name": "debug",
+        "request": "launch",
+        "command": "npm run dev",
+        "cwd": "${workspaceFolder}",
+        "resolveSourceMapLocations": [
+          "!**/node_modules/**",
+          "!node:internal/**"
+        ]
+      }
+    ]
+  }

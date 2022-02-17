@@ -10,13 +10,10 @@ export class UserService {
 
     const user = await this.getUserByEmail(email)
 
-    if (!user) {
-      throw new NotFoundError("User not found");
-    }
-
     if (!bcrypt.compareSync(password, user.password)) {
       throw new BadRequestError("Password don't match");
     }
+
     const payload = {
       userId: user.id,
       name: user.name,

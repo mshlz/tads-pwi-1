@@ -21,7 +21,7 @@ router.get("/", isAuth, safeThrow(async (req, res) => {
 /** Delete user */
 router.delete("/:id", isAuth, safeThrow(async (req, res) => {
   const { id } = req.params;
-  const result = await UserService.deleteUser(id);
+  const result = await UserService.deleteUser(parseInt(id));
 
   return res.json(result);
 }));
@@ -30,38 +30,64 @@ router.delete("/:id", isAuth, safeThrow(async (req, res) => {
 router.post("/", safeThrow(async (req, res) => {
   const { email, password, name } = req.body;
 
-  const errors = {}
+  try {
+    const errors = {}
 
-  if (!name) errors['name'] = 'Name field is required'
-  if (!email) errors['email'] = 'Email field is required'
-  if (!password) errors['password'] = 'Password field is required'
+    if (!name) errors['name'] = 'Name field is required'
+    if (!email) errors['email'] = 'Email field is required'
+    if (!password) errors['password'] = 'Password field is required'
 
-  if (Object.keys(errors).length) {
-    throw new ValidationError("Validation Error", errors);
+    if (Object.keys(errors).length) {
+      throw new ValidationError("Validation Error", errors);
+    }
+
+    const result = await UserService.createUser(email, password, name, 'user');
+    delete result.password
+
+    if (req.headers['content-type'] === 'application/json') {
+      return res.json(result);
+    }
+
+    req.session['banner'] = 'Account created, please login'
+    return res.redirect('/login')
+  } catch (e) {
+    if (req.headers['content-type'] === 'application/json') {
+      throw e
+    }
+
+    return res.render('signup', { errors: e.errors || { message: e.message }, form: { email, name } })
   }
-
-  const result = await UserService.createUser(email, password, name, 'user');
-  delete result.password
-
-  return res.json(result);
 }));
 
 /** Authenticate user */
 router.post("/login", safeThrow(async (req, res) => {
   const { email, password } = req.body;
 
-  const errors = {}
+  try {
+    const errors = {}
+    if (!email) errors['email'] = 'Email field is required'
+    if (!password) errors['password'] = 'Password field is required'
 
-  if (!email) errors['email'] = 'Email field is required'
-  if (!password) errors['password'] = 'Password field is required'
+    if (Object.keys(errors).length) {
+      throw new ValidationError("Validation Error", errors);
+    }
 
-  if (Object.keys(errors).length) {
-    throw new ValidationError("Validation Error", errors);
+    const token = await UserService.authenticate(email, password);
+    req.session['token'] = token
+
+    if (req.headers['content-type'] === 'application/json') {
+      return res.json({ token })
+    }
+
+    return res.redirect('/links')
+
+  } catch (e) {
+    if (req.headers['content-type'] === 'application/json') {
+      throw e
+    }
+
+    return res.render('login', { errors: e.errors || { message: e.message }, form: { email } })
   }
-
-  const token = await UserService.authenticate(email, password);
-
-  return res.json({ token });
 }));
 
 export default router
