@@ -1,7 +1,7 @@
 import { Router } from 'express';
+import * as LinkController from '../controllers/LinkController';
+import * as UserController from '../controllers/UserController';
 import { isAuth } from '../helpers/is-auth';
-import { safeThrow } from '../helpers/safe-throw';
-import { LinkService } from '../services/LinkService';
 import linkRouter from './linkRouter';
 import userRouter from './userRouter';
 const router = Router({ mergeParams: true })
@@ -9,39 +9,19 @@ const router = Router({ mergeParams: true })
 /**
  * Pages routes
  */
-router.get("/", isAuth, (req, res, next) => {
+// if authenticated redirect / to /links
+router.get("/", isAuth, (req, res) => {
     return res.redirect("/links");
 });
 
-router.get("/login", (req, res) => {
-    const banner = req.session['banner']
-    if (banner) {
-        delete req.session['banner']
-    }
-    res.render("login", { banner });
-});
+router.get("/login", UserController.renderLoginPage);
+router.get("/signup", UserController.renderSingUpPage);
+router.post("/logout", UserController.logout);
+router.get("/links", isAuth, LinkController.renderLinksPage);
 
-router.get("/signup", (req, res) => {
-    res.render("signup");
-});
-
-router.post("/logout", (req, res) => {
-    req.session.destroy(err => {
-        res.redirect('/')
-    })
-});
-
-router.get("/links", isAuth, (req, res) => {
-    res.render("links", { user: req.session['user']});
-});
 
 /** Redirect to the original link */
-router.get("/l/:hash", safeThrow(async (req, res) => {
-    const { hash } = req.params;
-    const originalLink = await LinkService.getOriginalLink(hash);
-
-    return res.redirect(originalLink);
-}));
+router.get("/l/:hash", LinkController.redirectShortLink);
 
 /**
  * API routes

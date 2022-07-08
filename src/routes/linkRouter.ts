@@ -1,7 +1,5 @@
 import { Router } from 'express';
-import { ValidationError } from "../helpers/http";
-import { safeThrow } from "../helpers/safe-throw";
-import { LinkService } from "../services/LinkService";
+import * as LinkController from "../controllers/LinkController";
 
 const router = Router({ mergeParams: true });
 
@@ -10,41 +8,15 @@ const router = Router({ mergeParams: true });
  */
 
 /** List all shortened links */
-router.get("/", safeThrow(async (req, res) => {
-  const result = await LinkService.getAllLinks();
-
-  return res.json(result);
-}));
+router.get("/", LinkController.getAll);
 
 /** Get stats from shortened link */
-router.get("/:hash", safeThrow(async (req, res) => {
-  const { hash } = req.params;
-  const result = await LinkService.getLink(hash);
-
-  return res.json(result);
-}));
+router.get("/:hash", LinkController.getByHash);
 
 /** Delete shortened link */
-router.delete("/:hash", safeThrow(async (req, res) => {
-  const { hash } = req.params;
-  const result = await LinkService.deleteLink(hash);
-
-  return res.json(result);
-}));
+router.delete("/:hash", LinkController.deleteByHash);
 
 /** Create a new shortened link */
-router.post("/", safeThrow(async (req, res) => {
-  const { link } = req.body;
-
-  if (!link) {
-    throw new ValidationError("Link field is required", {
-      link: ["Link field is required"],
-    });
-  }
-
-  const result = await LinkService.createLink(link);
-
-  return res.json(result);
-}));
+router.post("/", LinkController.create);
 
 export default router
