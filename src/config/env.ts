@@ -1,3 +1,4 @@
+export const DB_PATH = __dirname + "../../database.db"
 export const DB_HOST = process.env.DB_HOST || "localhost"
 export const DB_NAME = process.env.DB_NAME || "link_shortener"
 export const DB_USER = process.env.DB_USER || "postgres"

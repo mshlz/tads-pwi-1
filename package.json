@@ -16,6 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "nanoid": "^3.1.30",
     "pg": "^8.7.3",
+    "sqlite3": "^5.0.8",
     "typeorm": "^0.2.41"
   },
   "devDependencies": {

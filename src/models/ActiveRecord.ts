@@ -1,13 +1,13 @@
 import { PrimaryColumn, Column, BeforeInsert, BeforeUpdate, BaseEntity } from "typeorm"
 
 export class ActiveRecord extends BaseEntity {
-    @PrimaryColumn()
+    @PrimaryColumn({ generated: 'increment' })
     id: number
 
-    @Column({ type: 'timestamp' })
+    @Column({ type: 'datetime' })
     createdAt: Date
 
-    @Column({ type: 'timestamp' })
+    @Column({ type: 'datetime' })
     updatedAt: Date
 
     @BeforeInsert()
