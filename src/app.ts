@@ -25,7 +25,6 @@ export const createApp = async () => {
   }))
 
   await DatabaseService.init();
-  // await DatabaseService.sequelize.sync({ alter: true }); // uncomment to sync tables
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
